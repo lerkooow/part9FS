@@ -10,10 +10,6 @@
 9.6 Eslint  
 9.7 WebExerci
 
-## Typing an Express app  
-
-9.8: Patientor backend, step1  
-
 
 
 
