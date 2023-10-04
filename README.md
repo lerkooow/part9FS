@@ -15,8 +15,4 @@
 9.8: Patientor backend, step1  
 9.9: Patientor backend, step2  
 9.10: Patientor backend, step3  
-
-
-
-
-f
+9.11: Patientor backend, step4  
