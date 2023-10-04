@@ -1,4 +1,7 @@
 "use strict";
+
+const diagnosesRouter = require('../src/routes/diagnoses');
+
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -21,6 +24,8 @@ app.get('/api/ping', (_req, res) => {
     console.log('someone pinged here');
     res.send('pong');
 });
+
+app.use('/api/diagnoses', diagnosesRouter);
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
