@@ -1,14 +1,15 @@
 import patientData from '../data/patient.json';
-import { PatientEntry, NonSensitivePatientEntry, Gender } from "../types";
+import { Patient, NonSensitivePatient, Gender } from "../types";
 const { v4: uuidv4 } = require('uuid');
 
 
-const diagnoses: PatientEntry[] = patientData.map(({ gender, ...rest }) => ({
+const diagnoses: Patient[] = patientData.map(({ gender, ...rest }) => ({
   ...rest,
   gender: gender as Gender,
+  entries: []
 }));
 
-const getNonSensitiveEntries = (): NonSensitivePatientEntry[] => {
+const getNonSensitiveEntries = (): NonSensitivePatient[] => {
   return diagnoses.map(({ id, name, dateOfBirth, gender, occupation }) => ({
     id,
     name,
@@ -18,14 +19,20 @@ const getNonSensitiveEntries = (): NonSensitivePatientEntry[] => {
   }));
 };
 
-const addPatientor = (data: Omit<PatientEntry, 'id'>): PatientEntry => {
+const addPatientor = (data: Omit<Patient, 'id'>): Patient => {
   const id: string = uuidv4();
   const newEntry = { id, ...data };
 
   return newEntry;
 };
 
+const findById = (id: string): Patient | undefined => {
+  const entry = diagnoses.find(d => d.id === id);
+  return entry;
+};
+
 export default {
   getNonSensitiveEntries,
-  addPatientor
+  addPatientor,
+  findById
 };
