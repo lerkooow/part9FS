@@ -15,22 +15,17 @@ export interface Entry {
     date: string;
     specialist: string;
     description: string;
-    diagnosisCodes: Code[];
-}
-
-export interface Code {
-    diagnosisCodes: string;
+    diagnosisCodes: string[];
+    healthCheckRating: number;
 }
 
 export interface HospitalEntry extends Entry {
     type: "Hospital";
-    diagnosisCodes: Code[];
     description: string;
     discharge: {
         date: string;
         criteria: string;
     };
-    healthCheckRating: number;
 }
 
 export interface OccupationalHealthcareEntry extends Entry {
