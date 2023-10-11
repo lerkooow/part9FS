@@ -26,4 +26,6 @@
 ## Grande finale: Patientor
 9.20: Patientor, step1  
 9.21: Patientor, step2  
+9.22: Patientor, step3  
+
 

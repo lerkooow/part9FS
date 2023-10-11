@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Gender, Patient } from './types';
+import { Gender, Patient} from './types';
 
 const isString = (text: any): text is string => {
   return typeof text === 'string' || text instanceof String;
