@@ -28,5 +28,6 @@
 9.21: Patientor, step2  
 9.22: Patientor, step3  
 9.23: Patientor, step4  
+9.24: Patientor, step5  
 
 

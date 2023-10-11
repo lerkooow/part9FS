@@ -3,7 +3,11 @@ import { DiagnoseEntry } from "../types"
 const diagnoses: DiagnoseEntry[] = diagnoseData;
 
 const getEntries = ():DiagnoseEntry[] => {
-  return diagnoses;
+  return diagnoses.map(({ code, name, latin }) => ({
+    code,
+    name,
+    latin
+  }));
 };
 
 export default{
