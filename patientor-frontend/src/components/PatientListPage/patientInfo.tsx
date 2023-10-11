@@ -1,10 +1,18 @@
 import { Patient, Diagnosis } from "../../types";
 import { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
+
 import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
+import WorkIcon from '@mui/icons-material/Work';
+import NextWeekIcon from '@mui/icons-material/NextWeek';
+import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
+import Divider from '@mui/material/Divider';
+
 import patientService from "../../services/patients";
+
 
 const PatientInfo = () => {
   const [patient, setPatient] = useState<Patient | null>(null);
@@ -60,9 +68,9 @@ const PatientInfo = () => {
       <h2>entries</h2>
       {patient.entries.map((entry) => (
         <div key={entry.id}>
-          <p>
-            {entry.date} <em>{entry.description}</em>
-          </p>
+          <p>{entry.date}{entry.type === "OccupationalHealthcare" ? <WorkIcon/> : entry.type === "Hospital" ? <NextWeekIcon/> : <MedicalServicesIcon/> } <em>{entry.type === "OccupationalHealthcare" && entry.employerName}</em></p>
+          <p><em>{entry.description}</em></p>
+          {entry.healthCheckRating === 1 ? <FavoriteOutlinedIcon color="primary"/> : entry.healthCheckRating === 0 ?  <FavoriteOutlinedIcon color="success"/> : null}
           {entry.diagnosisCodes && entry.diagnosisCodes.length > 0 ? (
             <ul>
               {entry.diagnosisCodes.map((code) => (
@@ -72,6 +80,8 @@ const PatientInfo = () => {
               ))}
             </ul>
           ) : null}
+          <p>diagnose by {entry.specialist}</p>
+          <Divider />
         </div>
       ))}
     </div>
