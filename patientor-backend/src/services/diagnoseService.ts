@@ -1,8 +1,8 @@
 import diagnoseData from '../data/diagnostics.json';
-import { DiagnoseEntry } from "../types"
-const diagnoses: DiagnoseEntry[] = diagnoseData;
+import { Diagnosis } from "../types"
+const diagnoses: Diagnosis[] = diagnoseData;
 
-const getEntries = ():DiagnoseEntry[] => {
+const getEntries = ():Diagnosis[] => {
   return diagnoses.map(({ code, name, latin }) => ({
     code,
     name,
