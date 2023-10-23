@@ -15,6 +15,7 @@ interface Props {
 }
 
 const PatientListPage = ({ patients, setPatients } : Props ) => {
+console.log("🚀 ~ file: index.tsx:18 ~ PatientListPage ~ patients:", patients)
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [error, setError] = useState<string>();

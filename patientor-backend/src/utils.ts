@@ -7,12 +7,13 @@ const isString = (text: unknown): text is string => {
   return typeof text === 'string' || text instanceof String;
 };
 
-const parseString = (text: unknown): string => {
+const parseString = (text: unknown): string=> {
   if (!text || !isString(text)) {
     throw new Error(`Incorrect or missing text: ${text}`);
   }
   return text;
 };
+
 
 const isDate = (date: string): boolean => {
   return Boolean(Date.parse(date));
@@ -37,11 +38,12 @@ const parseGender = (gender: unknown): Gender => {
 };
 
 const parseDiagnosisCodes = (object: unknown): Array<Diagnosis['code']> =>  {
-  if (!object || typeof object !== 'object' || !('diagnosisCodes' in object)) {
+  if (!object || !Array.isArray(object)) {
+    console.error('Invalid object:', object);
     return [] as Array<Diagnosis['code']>;
   }
 
-  return object.diagnosisCodes as Array<Diagnosis['code']>;
+  return object as Array<Diagnosis['code']>;
 };
 
 const parseNumber = (number: unknown): number => {
@@ -74,19 +76,26 @@ const toPatientEntry = (object: unknown): NewPatientEntry => {
 };
 
 const toEntry = (object: unknown): NewEntry => {
+console.log("🚀 ~ file: utils.ts:77 ~ toEntry ~ object:", object)
 
   if ( !object || typeof object !== 'object' ) {
     throw new Error('Incorrect or missing data');
   }
 
-  if ('description' in object && 'date' in object && 'specialist' in object && 'diagnosisCodes' in object && 'healthCheckRating' in object )  {
+  if ('description' in object && 'date' in object && 'specialist' in object && 'diagnosisCodes' in object && 'healthCheckRating' in object && 'employerName' in object && 'startDate' in object && 'endDate' in object)  {
     const newEntry: NewEntry = {
       description: parseString(object.description),
       date: parseDate(object.date),
       specialist: parseString(object.specialist),
       diagnosisCodes: parseDiagnosisCodes(object.diagnosisCodes),
-      healthCheckRating: parseNumber(object.healthCheckRating)
-    };
+      healthCheckRating: parseNumber(object.healthCheckRating),
+      employerName: parseString(object.employerName),
+      type: "OccupationalHealthcare",
+      sickLeave: {
+        startDate: object.startDate as string | undefined,
+        endDate: object.endDate as string | undefined,
+      }
+  };
 
     return newEntry;
   }

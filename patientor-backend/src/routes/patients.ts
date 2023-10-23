@@ -26,11 +26,32 @@ router.get('/:id', (req, res) => {
   }
 });
 
-router.post('/:id/entries', (req, res) => {
-  const data = toEntry(req.body);
-  const newEntry = patientService.addEntries(data);
 
-  res.json(newEntry);
+router.get('/:id/entries', (req, res) => {
+  const diary = patientService.findById(req.params.id);
+
+  if (diary) {
+    const patientEntries = patientService.getNonSensitivePatientsById(req.params.id);
+
+    if (patientEntries) {
+      res.send(patientEntries);
+    } else {
+      res.status(404).send('Patient entries not found');
+    }
+  } else {
+    res.sendStatus(404);
+  }
+});
+
+router.post('/:id/entries', (req, res) => {
+  const diary = patientService.findById(req.params.id);
+  console.log("🚀 ~ file: patients.ts:57 ~ router.post ~ diary:", diary)
+
+  if (diary) {
+    const data = toEntry(req.body);
+    const newEntry = patientService.addEntries(data, diary);
+    res.json(newEntry);
+  }
 });
 
 export default router;

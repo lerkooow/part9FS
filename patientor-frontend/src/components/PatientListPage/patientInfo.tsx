@@ -10,31 +10,35 @@ import WorkIcon from '@mui/icons-material/Work';
 import NextWeekIcon from '@mui/icons-material/NextWeek';
 import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
 import Divider from '@mui/material/Divider';
-// import {  TextField, Grid, Button } from '@mui/material';
+import { Grid, Button } from '@mui/material';
 
 import patientService from "../../services/patients";
+import FormEntry from "./Form";
+
 
 const PatientInfo = () => {
   const [patient, setPatient] = useState<Patient | null>(null);
   const { id } = useParams();
   const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
+  const [newData, setNewData] = useState(false);
 
-  // const [date, setDate] = useState('');
-  // const [specialist, setSpecialist] = useState('');
-  // const [description, setDescription] = useState('');
-  // const [diagnosisCodes, setDiagnosisCodes] = useState([]);
-  // const [healthCheckRating, setHealthCheckRating] = useState(0);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handleFetchPatient = async () => {
+    const patientData = await patientService.getById(String(id));
+        setPatient(patientData);
+        setNewData(false)
+  }
 
   useEffect(() => {
     const fetchPatient = async () => {
       try {
-        const patientData = await patientService.getById(String(id));
-        setPatient(patientData);
+        handleFetchPatient();
       } catch (error) {
         console.error("Error fetching patient data:", error);
       }
     };
     fetchPatient();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
@@ -57,17 +61,7 @@ const PatientInfo = () => {
     );
   }
 
-  // const addData = (event: SyntheticEvent) => {
-  //   event.preventDefault();
-  //   onSubmit({
-  //     date,
-  //     specialist,
-  //     description,
-  //     diagnosisCodes: ["N63"],
-  //     healthCheckRating: 0,
-  //     id: ""
-  //   });
-  // };
+
 
   return (
     <div>
@@ -83,75 +77,18 @@ const PatientInfo = () => {
       </h2>
       <p>ssn: {patient.ssn}</p>
       <p>occupation: {patient.occupation}</p>
-
-      {/* <div>
-      <form onSubmit={addData}>
-        <TextField
-          label="Date"
-          fullWidth
-          value={date}
-          onChange={({ target }) => setDate(target.value)}
-        />
-        <TextField
-          label="Specialist"
-          fullWidth
-          value={specialist}
-          onChange={({ target }) => setSpecialist(target.value)}
-        />
-        <TextField
-          label="Description"
-          placeholder="description"
-          fullWidth
-          value={description}
-          onChange={({ target }) => setDescription(target.value)}
-        />
-        <TextField
-          label="DiagnosisCodes"
-          fullWidth
-          value={diagnosisCodes}
-          onChange={({ target }) => setDiagnosisCodes(target.value)}
-        />
-        <TextField
-          label="HealthCheckRating"
-          placeholder="healthCheckRating"
-          fullWidth
-          value={healthCheckRating}
-          onChange={({ target }) => setHealthCheckRating(target.value)}
-        />
-
-        <Grid>
-          <Grid item>
-            <Button
-              color="secondary"
-              variant="contained"
-              style={{ float: "left" }}
-              type="button"
-              onClick={onCancel}
-            >
-              Cancel
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              style={{
-                float: "right",
-              }}
-              type="submit"
-              variant="contained"
-            >
-              Add
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
-    </div> */}
-
-      <h2>entries</h2>
+    <div>
+     {newData &&  <FormEntry handleFetchPatient={handleFetchPatient}/>}
+      <div>
+        {newData ? <h2 style={{paddingTop: "80px"}}>Entries</h2>
+        : <h2>Entries</h2>}
+        <Divider />
+      </div>
       {patient.entries.map((entry) => (
         <div key={entry.id}>
-          <p>{entry.date}{entry.type === "OccupationalHealthcare" ? <WorkIcon/> : entry.type === "Hospital" ? <NextWeekIcon/> : <MedicalServicesIcon/> } <em>{entry.type === "OccupationalHealthcare" && entry.employerName}</em></p>
+          <p>{entry.date}{entry.type === "OccupationalHealthcare" ? <WorkIcon/> : entry.type === "Hospital" ? <NextWeekIcon/> : <MedicalServicesIcon/> } <em>{entry.employerName}</em></p>
           <p><em>{entry.description}</em></p>
-          {entry.healthCheckRating === 1 ? <FavoriteOutlinedIcon color="primary"/> : entry.healthCheckRating === 0 ?  <FavoriteOutlinedIcon color="success"/> : null}
+          {entry.healthCheckRating === 1 ? <FavoriteOutlinedIcon color="primary"/> : entry.healthCheckRating === 0 ?  <FavoriteOutlinedIcon color="success"/> : entry.healthCheckRating === 2 ? <FavoriteOutlinedIcon color="error"/> : null}
           {entry.diagnosisCodes && entry.diagnosisCodes.length > 0 ? (
             <ul>
               {entry.diagnosisCodes.map((code) => (
@@ -161,10 +98,31 @@ const PatientInfo = () => {
               ))}
             </ul>
           ) : null}
-          <p>diagnose by {entry.specialist}</p>
+          {entry.type === "OccupationalHealthcare" && entry.sickLeave && entry.sickLeave.startDate && entry.sickLeave.endDate ? (
+          <div>
+            <h3>Sickleave:</h3>
+            <p>Start date: <em>{entry.sickLeave.startDate}</em></p>
+            <p>End date: <em>{entry.sickLeave.endDate}</em></p>
+            </div>
+            ) : null}
           <Divider />
         </div>
       ))}
+      <Grid item>
+            <Button
+              style={{
+                float: "left",
+                marginTop: "10px",
+                marginBottom: "50px"
+              }}
+              type="submit"
+              variant="contained"
+              onClick={() => setNewData(!newData)}
+            >
+              Add New Entry
+            </Button>
+          </Grid>
+    </div>
     </div>
   );
 };

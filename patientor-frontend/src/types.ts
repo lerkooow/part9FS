@@ -17,6 +17,7 @@ export interface Entry {
   description: string;
   diagnosisCodes: string[];
   healthCheckRating: number;
+  employerName: string;
 }
 
 
@@ -30,10 +31,9 @@ export interface HospitalEntry extends Entry {
 
 export interface OccupationalHealthcareEntry extends Entry {
   type: "OccupationalHealthcare";
-  employerName: string;
   sickLeave?: {
-      startDate: string;
-      endDate: string;
+      startDate?: string;
+      endDate?: string;
   };
 }
 
@@ -48,3 +48,8 @@ export interface Patient {
 }
 
 export type PatientFormValues = Omit<Patient, "id" | "entries">;
+
+// one
+
+export type FormEntries = Omit<Entry, 'id'> | OccupationalHealthcareEntry | { startDate?: string; endDate?: string };
+

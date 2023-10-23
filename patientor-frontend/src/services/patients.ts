@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Diagnosis, Patient, PatientFormValues } from "../types";
+import { Diagnosis, Patient, PatientFormValues, FormEntries, Entry } from "../types";
 
 import { apiBaseUrl } from "../constants";
 
@@ -36,8 +36,29 @@ const create = async (object: PatientFormValues) => {
   return data;
 };
 
+const createEntries = async (object: FormEntries, id: string) => {
+  try {
+    const { data } = await axios.post<Entry[]>(
+      `${apiBaseUrl}/patients/${id}/entries`,
+      object
+    );
+    return data;
+  } catch (error) {
+    console.error("Error creating entries:", error);
+    throw error;
+  }
+};
+
+const getEntries = async (id: string) => {
+  const { data } = await axios.get<{entries: Entry[]}>(
+    `${apiBaseUrl}/patients/${id}/entries`
+  );
+
+  return data.entries;
+};
+
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  getAll, create, getById, getDiagnoses
+  getAll, create, getById, getDiagnoses, createEntries, getEntries
 };
 
